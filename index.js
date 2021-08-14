@@ -3,6 +3,8 @@
  */
 
 class Redux {
+    #state = {};
+
 	constructor(reducer, initialState) {
 		if (
 			!reducer ||
@@ -12,14 +14,14 @@ class Redux {
 		)
 			throw new Error("Reducer and initialState are required.");
 
-		this.state = initialState || {};
+		this.#state = initialState || {};
 		this.reducer = reducer;
 		this.subscribers = [];
 		this.middlewares = [];
 	}
 
 	getState() {
-		return this.state;
+		return this.#state;
 	}
 
 	notifySubscribers() {
@@ -32,13 +34,13 @@ class Redux {
 	// # -> Private Class Method
 	#setState(newState) {
 		if (!newState || !newState instanceof Object) return;
-		this.state = newState;
-		notifySubscribers();
+		this.#state = newState;
+		this.notifySubscribers();
 	}
 
 	dispatch(action) {
 		if (this.reducer instanceof Function) {
-			this.#setState(this.reducer(this.state, action));
+			this.#setState(this.reducer(this.#state, action));
 		}
 	}
 
