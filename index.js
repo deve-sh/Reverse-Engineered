@@ -41,6 +41,27 @@ class Redux {
 		this.#notifySubscribers();
 	}
 
+	// Work In Progress, don't fully understand the full flow of applying middlewares to Redux.
+	#applyMiddlewaresToAction(action, finished) {
+		if (this.#middlewares.length) {
+			let lastResult = null;
+			for (let i = 0; i < this.#middlewares.length; ) {
+				if (middleware instanceof Function) {
+					let next = (result) => {
+						lastResult = result;
+						if (this.#middlewares[i + 1] instanceof Function) {
+							let nextMiddleware = this.#middlewares[i + 1];
+							i++;
+							nextMiddleware(this.getState(), action, lastResult);
+						} else finished(lastResult, action);
+					};
+
+					lastResult = middleware(this.getState(), action, next);
+				} else finished(lastResult, action);
+			}
+		}
+	}
+
 	dispatch(action) {
 		if (this.#reducer instanceof Function) {
 			this.#setState(this.#reducer(this.#state, action));
