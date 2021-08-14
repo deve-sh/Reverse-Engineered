@@ -22,15 +22,18 @@ class Redux {
 		return this.state;
 	}
 
-	// # -> Private Class Method
-	#setState(newState) {
-		if (!newState) return;
-
-		this.state = newState;
+	notifySubscribers() {
 		if (this.subscribers.length) {
 			// Notify subscribers of change to state.
 			for (let func of this.subscribers) func(this.getState());
 		}
+	}
+
+	// # -> Private Class Method
+	#setState(newState) {
+		if (!newState || !newState instanceof Object) return;
+		this.state = newState;
+		notifySubscribers();
 	}
 
 	dispatch(action) {
