@@ -48,7 +48,10 @@ class Redux {
 		if (!this.#isSingleReducer()) {
 			for (let reducer in this.#reducers) // Applying action based on each reducer.
 				if (this.#reducers[reducer] instanceof Function)
-					newState[reducer] = this.#reducers[reducer](this.getState(), action);
+					newState[reducer] = this.#reducers[reducer](
+						newState[reducer] || {},
+						action
+					);
 		} else {
 			newState =
 				this.#reducers instanceof Function
