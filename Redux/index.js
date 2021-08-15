@@ -77,7 +77,18 @@ function combineReducers(reducerMap = {}) {
 function createStore(reducers, initialState) {
 	if (instance) return instance;
 	else {
-		instance = new Redux(reducer, initialState);
+		if (!reducers) throw new Error("Reducers not passed to createStore");
+		if (!initialState) {
+			// Setting up initialState from the default value returned by the reducer.
+			if (reducers instanceof Object) {
+				// Multiple reducers passed.
+				initialState = {};
+				for (let reducer in reducers)
+					initialState[reducer] = reducers[reducer]({}, {});
+			} else if (reducers instanceof Function)
+				initialState = reducers({}, {}) || {};
+		}
+		instance = new Redux(reducers, initialState);
 		return instance;
 	}
 }
