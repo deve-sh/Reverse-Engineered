@@ -6,7 +6,6 @@ class Redux {
 	#state = {};
 	#reducer = () => null;
 	#subscribers = [];
-	#middlewares = [];
 
 	constructor(reducer, initialState) {
 		if (
@@ -20,7 +19,6 @@ class Redux {
 		this.#state = initialState || {};
 		this.#reducer = reducer;
 		this.#subscribers = [];
-		this.#middlewares = [];
 	}
 
 	getState() {
@@ -39,27 +37,6 @@ class Redux {
 		if (!newState || !newState instanceof Object) return;
 		this.#state = newState;
 		this.#notifySubscribers();
-	}
-
-	// Work In Progress, don't fully understand the full flow of applying middlewares to Redux.
-	#applyMiddlewaresToAction(action, finished) {
-		if (this.#middlewares.length) {
-			let lastResult = null;
-			for (let i = 0; i < this.#middlewares.length; ) {
-				if (middleware instanceof Function) {
-					let next = (result) => {
-						lastResult = result;
-						if (this.#middlewares[i + 1] instanceof Function) {
-							let nextMiddleware = this.#middlewares[i + 1];
-							i++;
-							nextMiddleware(this.getState(), action, lastResult);
-						} else finished(lastResult, action);
-					};
-
-					lastResult = middleware(this.getState(), action, next);
-				} else finished(lastResult, action);
-			}
-		}
 	}
 
 	dispatch(action) {
