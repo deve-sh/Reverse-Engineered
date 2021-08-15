@@ -69,7 +69,12 @@ class Redux {
 
 // Export a singleton instance of the above class. So each part of the app has access to only one instance.
 let instance = null;
-function createStore(reducer, initialState) {
+
+function combineReducers(reducerMap = {}) {
+	return reducerMap;
+}
+
+function createStore(reducers, initialState) {
 	if (instance) return instance;
 	else {
 		instance = new Redux(reducer, initialState);
