@@ -1,3 +1,10 @@
+'''
+Redux clone from JavaScript to Python
+
+Utilizes Singleton
+
+__variableName -> Private variables
+'''
 class Redux:
     __subscribers = []
     __reducers = {}
