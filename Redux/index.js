@@ -83,13 +83,14 @@ function createStore(reducers, initialState) {
 		if (!reducers) throw new Error("Reducers not passed to createStore");
 		if (!initialState) {
 			// Setting up initialState from the default value returned by the reducer.
-			if (reducers instanceof Object) {
+			if (reducers instanceof Function) {
+				initialState = reducers(undefined, {}) || {};
+			} else if (reducers instanceof Object) {
 				// Multiple reducers passed.
 				initialState = {};
 				for (let reducer in reducers)
-					initialState[reducer] = reducers[reducer]({}, {});
-			} else if (reducers instanceof Function)
-				initialState = reducers({}, {}) || {};
+					initialState[reducer] = reducers[reducer](undefined, {});
+			}
 		}
 		instance = new Redux(reducers, initialState);
 		return instance;
