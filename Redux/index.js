@@ -68,6 +68,12 @@ class Redux {
 			if (this.#subscribers[i] === callbackFunction) return;
 		this.#subscribers.push(callbackFunction);
 	}
+
+	unsubscribe(callbackFunction) {
+		this.#subscribers = this.#subscribers.filter(
+			(func) => func !== callbackFunction
+		);
+	}
 }
 
 // Export a singleton instance of the above class. So each part of the app has access to only one instance.
