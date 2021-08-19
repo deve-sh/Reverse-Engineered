@@ -1,10 +1,12 @@
-'''
+"""
 Redux clone from JavaScript to Python
 
 Utilizes Singleton
 
 __variableName -> Private variables
-'''
+"""
+
+
 class Redux:
     __subscribers = []
     __reducers = {}
@@ -33,3 +35,31 @@ class Redux:
             for func in self.__subscribers:
                 # Notify subscriber of change to state.
                 func(self.get_state())
+
+
+# Export a singleton instance of the above class. So each part of the app has access to only one instance.
+instance = None
+
+
+def combineReducers(reducerMap={}):
+    return reducerMap
+
+
+def createStore(reducers, initial_state):
+    global instance
+    if instance:
+        return instance
+    else:
+        if not reducers:
+            raise "Reducers not passed to createStore"
+        if not initial_state:
+            # Setting up initial_state from the default value returned by the reducer.
+            if callable(reducers):
+                initial_state = reducers(None, {}) or {}
+            elif reducers is dict:
+                # Multiple reducers passed.
+                initial_state = {}
+                for reducer in reducers:
+                    initial_state[reducer] = reducers[reducer](None, {})
+        instance = Redux(reducers, initial_state)
+        return instance
