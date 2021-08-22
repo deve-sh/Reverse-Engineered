@@ -77,7 +77,7 @@ class Redux {
 }
 
 // Export a singleton instance of the above class. So each part of the app has access to only one instance.
-let instance = null;
+let instance = null;	// Could use something like window.reduxInstance or global.reduxInstance in case of node.
 
 function combineReducers(reducerMap = {}) {
 	return reducerMap;
