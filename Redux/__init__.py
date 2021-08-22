@@ -21,7 +21,7 @@ class Redux:
         self.__reducers = reducers or (lambda: None)
         self.__state = initial_state or {}
 
-    def isSingleReducer(self):
+    def __isSingleReducer(self):
         return (
             callable(self.__reducers)
             or not type(self.__reducers) is dict
@@ -36,6 +36,31 @@ class Redux:
             for func in self.__subscribers:
                 # Notify subscriber of change to state.
                 func(self.get_state())
+
+    def __set_state(self, new_state):
+        if not new_state or not new_state is dict:
+            return
+        self.__state = new_state
+        self.__notify_subscribers()
+
+    def dispatch(self, action):
+        new_state = self.get_state()
+
+        if not self.__isSingleReducer():
+            for (
+                reducer
+            ) in self.__reducers.keys():  # Applying action based on each reducer.
+                if callable(self.__reducers[reducer]):
+                    new_state[reducer] = self.__reducers[reducer](
+                        new_state[reducer] or {}, action
+                    )
+        else:
+            new_state = (
+                self.__reducers(self.__state, action)
+                if callable(self.__reducers)
+                else new_state
+            )
+        return self.__set_state(new_state)
 
 
 # Export a singleton instance of the above class. So each part of the app has access to only one instance.
