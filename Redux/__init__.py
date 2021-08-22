@@ -1,7 +1,8 @@
 """
 Redux clone from JavaScript to Python
+A Work-In-Progress
 
-Utilizes Singleton
+Utilizes Singleton and Observer Design Patterns
 
 __variableName -> Private variables
 """
