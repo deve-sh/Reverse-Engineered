@@ -62,6 +62,21 @@ class Redux:
             )
         return self.__set_state(new_state)
 
+    def subscribe(self, callback):
+		# Check if functiion has already been added to list of subscribers.
+        for subscriber in self.__subscribers:
+            if (subscriber == callback):
+                return
+        self.__subscribers.append(callback)
+
+    def unsubscribe(self, callback):
+        def filter_function(func):
+            if func == callback:
+                return False
+            else:
+                return True
+        self.__subscribers = filter(filter_function, self.__subscribers)
+
 
 # Export a singleton instance of the above class. So each part of the app has access to only one instance.
 instance = None
