@@ -14,9 +14,7 @@ class Redux:
     __state = {}
 
     def __init__(self, reducers, initial_state):
-        if (
-            not callable(reducers) and not type(self.__reducers) is dict
-        ) or not initial_state:
+        if (not callable(reducers) and not type(reducers) is dict) or not initial_state:
             raise "Reducers and initial state are required"
         self.__reducers = reducers or (lambda: None)
         self.__state = initial_state or {}
@@ -38,7 +36,7 @@ class Redux:
                 func(self.get_state())
 
     def __set_state(self, new_state):
-        if not new_state or not new_state is dict:
+        if not new_state or not type(new_state) is dict:
             return
         self.__state = new_state
         self.__notify_subscribers()
@@ -63,9 +61,9 @@ class Redux:
         return self.__set_state(new_state)
 
     def subscribe(self, callback):
-		# Check if functiion has already been added to list of subscribers.
+        # Check if functiion has already been added to list of subscribers.
         for subscriber in self.__subscribers:
-            if (subscriber == callback):
+            if subscriber == callback:
                 return
         self.__subscribers.append(callback)
 
@@ -75,6 +73,7 @@ class Redux:
                 return False
             else:
                 return True
+
         self.__subscribers = filter(filter_function, self.__subscribers)
 
 
@@ -86,7 +85,7 @@ def combine_reducers(reducerMap={}):
     return reducerMap
 
 
-def create_store(reducers, initial_state):
+def create_store(reducers, initial_state={}):
     global instance
     if instance:
         return instance
@@ -97,7 +96,7 @@ def create_store(reducers, initial_state):
             # Setting up initial_state from the default value returned by the reducer.
             if callable(reducers):
                 initial_state = reducers(None, {}) or {}
-            elif reducers is dict:
+            elif type(reducers) is dict:
                 # Multiple reducers passed.
                 initial_state = {}
                 for reducer in reducers:
