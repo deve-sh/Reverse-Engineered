@@ -82,11 +82,11 @@ class Redux:
 instance = None
 
 
-def combineReducers(reducerMap={}):
+def combine_reducers(reducerMap={}):
     return reducerMap
 
 
-def createStore(reducers, initial_state):
+def create_store(reducers, initial_state):
     global instance
     if instance:
         return instance
