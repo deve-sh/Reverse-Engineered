@@ -30,7 +30,7 @@ class Redux:
         return self.__state
 
     def __notify_subscribers(self):
-        if self.__subscribers.length:
+        if len(self.__subscribers):
             for func in self.__subscribers:
                 # Notify subscriber of change to state.
                 func(self.get_state())
