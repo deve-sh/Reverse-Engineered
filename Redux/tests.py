@@ -7,10 +7,20 @@ DECREMENT_COUNT = "DECREMENT_COUNT"
 
 
 def firstReducer(state={"count": 0}, action={"type": INCREMENT_COUNT}):
+    if not "type" in action:
+        return state
     if action["type"] == INCREMENT_COUNT:
-        return {"count": (state.count or 0) + 1}
+        return (
+            {"count": 1}
+            if not "count" in state
+            else {"count": (state["count"] or 0) + 1}
+        )
     elif action["type"] == DECREMENT_COUNT:
-        return {"count": (state.count or 0) - 1}
+        return (
+            {"count": 1}
+            if not "count" in state
+            else {"count": (state["count"] or 0) - 1}
+        )
     else:
         return state
 
@@ -23,6 +33,9 @@ SET_TEXT = "SET_TEXT"
 
 
 def otherReducer(state={"text": ""}, action={"type": SET_TEXT, "text": ""}):
+    if not "type" in action:
+        return state
+
     if action["type"] == SET_TEXT:
         return {"text": action["text"] or ""}
     else:
@@ -32,15 +45,11 @@ def otherReducer(state={"text": ""}, action={"type": SET_TEXT, "text": ""}):
 def singleReducerTests():
     store = create_store(firstReducer)
 
-    print("Initial State: ", store["get_state"]())
-    print(
-        "Dispatching: ", INCREMENT_COUNT, store["dispatch"]({"type": INCREMENT_COUNT})
-    )
-    print("Updated State: ", store["get_state"]())
-    print(
-        "Dispatching: ", DECREMENT_COUNT, store["dispatch"]({"type": DECREMENT_COUNT})
-    )
-    print("Updated State: ", store["get_state"]())
+    print("Initial State: ", store.get_state())
+    print("Dispatching: ", INCREMENT_COUNT, store.dispatch({"type": INCREMENT_COUNT}))
+    print("Updated State: ", store.get_state())
+    print("Dispatching: ", DECREMENT_COUNT, store.dispatch({"type": DECREMENT_COUNT}))
+    print("Updated State: ", store.get_state())
 
 
 def multipleReducerTests():
@@ -53,21 +62,18 @@ def multipleReducerTests():
         )
     )
 
-    print("Initial State: ", store["get_state"]())
-    print(
-        "Dispatching: ", INCREMENT_COUNT, store["dispatch"]({"type": INCREMENT_COUNT})
-    )
-    print("Updated State: ", store["get_state"]())
-    print(
-        "Dispatching: ", DECREMENT_COUNT, store["dispatch"]({"type": DECREMENT_COUNT})
-    )
-    print("Updated State: ", store["get_state"]())
+    print("Initial State: ", store.get_state())
+    print("Dispatching: ", INCREMENT_COUNT, store.dispatch({"type": INCREMENT_COUNT}))
+    print("Updated State: ", store.get_state())
+    print("Dispatching: ", DECREMENT_COUNT, store.dispatch({"type": DECREMENT_COUNT}))
+    print("Updated State: ", store.get_state())
 
     print(
         "Dispatching: ",
         SET_TEXT,
-        store["dispatch"]({"type": SET_TEXT, "text": "Updated Text"}),
+        store.dispatch({"type": SET_TEXT, "text": "Updated Text"}),
     )
-    print("Updated State: ", store["get_state"]())
+    print("Updated State: ", store.get_state())
+
 
 multipleReducerTests()
