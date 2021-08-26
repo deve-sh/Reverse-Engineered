@@ -69,3 +69,5 @@ def multipleReducerTests():
         store["dispatch"]({"type": SET_TEXT, "text": "Updated Text"}),
     )
     print("Updated State: ", store["get_state"]())
+
+multipleReducerTests()
